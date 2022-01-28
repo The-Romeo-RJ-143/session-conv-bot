@@ -18,38 +18,36 @@ async def process_callback_query(c: Client, cb: CallbackQuery):
         if name == "pyrogram":
             await session.load_pyrogram_session(MAIN_SESSION)
 
-    else:
-        if cb.message.reply_to_message:
-            SESSION_STRING = cb.message.reply_to_message.text
-            if len(SESSION_STRING) >= 251 and SESSION_STRING[0] != "1":
-                await session.load_pyrogram_session(SESSION_STRING)
+    elif cb.message.reply_to_message:
+        SESSION_STRING = cb.message.reply_to_message.text
+        if len(SESSION_STRING) >= 251 and SESSION_STRING[0] != "1":
+            await session.load_pyrogram_session(SESSION_STRING)
 
-            if len(SESSION_STRING) >= 251 and SESSION_STRING[0] == "1":
-                await session.load_telethon_session(SESSION_STRING)
+        if len(SESSION_STRING) >= 251 and SESSION_STRING[0] == "1":
+            await session.load_telethon_session(SESSION_STRING)
 
     if not session.loaded:
         await cb.edit_message_text("Failed to load session file.")
 
-    else:
-        if cb.data == "pyrogram_file":
-            await session.generate_pyrogram_session_file(CONV_SESSION)
+    elif cb.data == "pyrogram_file":
+        await session.generate_pyrogram_session_file(CONV_SESSION)
 
-        elif cb.data == "telethon_file":
-            await session.generate_telethon_session_file(CONV_SESSION)
+    elif cb.data == "telethon_file":
+        await session.generate_telethon_session_file(CONV_SESSION)
 
-        elif cb.data == "pyrogram_string":
-            await cb.edit_message_text(
-                "<b>Pyrogram Session:</b> <code>{}</code>".format(
-                    await session.generate_string_pyrogram()
-                )
+    elif cb.data == "pyrogram_string":
+        await cb.edit_message_text(
+            "<b>Pyrogram Session:</b> <code>{}</code>".format(
+                await session.generate_string_pyrogram()
             )
+        )
 
-        elif cb.data == "telethon_string":
-            await cb.edit_message_text(
-                "<b>Telethon Session:</b> <code>{}</code>".format(
-                    await session.generate_string_telethon()
-                )
+    elif cb.data == "telethon_string":
+        await cb.edit_message_text(
+            "<b>Telethon Session:</b> <code>{}</code>".format(
+                await session.generate_string_telethon()
             )
+        )
 
     if os.path.isfile(CONV_SESSION):
         try:

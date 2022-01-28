@@ -57,9 +57,7 @@ class Session:
 
     @property
     def test_mode(self):
-        if self._port is not None:
-            return self._port == 80
-        return self._test_mode
+        return self._port == 80 if self._port is not None else self._test_mode
 
     @property
     def dc_id(self):
